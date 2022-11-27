@@ -1,13 +1,14 @@
 // Requiring module
-const express = require('express');
+const express = require("express");
 var path = require('path');
-
+var x = path.join(__dirname, 'public')
 const app = express();
 
 function authentication(req, res, next) {
 	var authheader = req.headers.authorization;
 	console.log(req.headers);
 
+    //niepoprawna autoryzacja
 	if (!authheader) {
 		var err = new Error('You are not authenticated!');
 		res.setHeader('WWW-Authenticate', 'Basic');
@@ -20,8 +21,9 @@ function authentication(req, res, next) {
 	var user = auth[0];
 	var pass = auth[1];
 
-	if (user == '' && pass == '') {
-
+    //poprawna autopryzacja
+	if (user == 'kamil' && pass == 'kamil') {
+        
 		// If Authorized user
 		next();
 	} else {
@@ -30,12 +32,11 @@ function authentication(req, res, next) {
 		err.status = 401;
 		return next(err);
 	}
-
 }
 
 // First step is the authentication of the client
 app.use(authentication)
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(x));
 
 // Server setup
 app.listen((3000), () => {
